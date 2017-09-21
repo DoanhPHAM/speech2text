@@ -1,5 +1,5 @@
-# Simple Todo
-Simple Todo application with React
+# Simple Speech to text
+Simple speech to text with web speech recognize and react
 
 #### Start server
 ```sh
@@ -10,7 +10,3 @@ yarn start
 ```sh
 yarn build
 ```
-
-
-# API
-Simple API created in branch [simple-api-server](https://github.com/DoanhPHAM/todo/tree/simple-api-server)
