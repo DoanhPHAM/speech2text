@@ -161,6 +161,10 @@ a:hover {
     display: flex;
     align-items: center;
     justify-content: space-between;
+    .language {
+        text-align: right;
+    }
+
     &.translate {
         margin-top: 24px;
         margin-bottom: 12px;

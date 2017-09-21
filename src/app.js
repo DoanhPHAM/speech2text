@@ -1,37 +1,19 @@
 import React from 'react';
 import languages from './constant';
 import recognition from './recognition';
-import axios from 'axios';
 import './app.scss';
-
-const code = {
-    'ja-JP': 'ja',
-    'vi-VN': 'vi',
-    'en-GB': 'en',
-    'en-US': 'en',
-}
-
-/*
- * I'm using yandex.net api to translate text
- */
-const freeKey = '_YOUR_API_KEY_';
 
 export default class App extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
             selectedLanguage: languages[0][1],
-            from: 'ja',
-            to: 'ja',
             isRecording: false,
             texts: [],
-            translated: []
         }
 
         this.startRecording = this.startRecording.bind(this);
         this.updateCountry = this.updateCountry.bind(this);
-        this.updateTranlsateLanguage = this.updateTranlsateLanguage.bind(this);
-        this.translateText = this.translateText.bind(this);
         this.onResult = this.onResult.bind(this);
     }
 
@@ -46,44 +28,18 @@ export default class App extends React.Component {
 
     onResult(text) {
         let texts = this.state.texts;
-        let translated = this.state.translated;
         texts.push(text);
-        this.setState({texts, isRecording: false}, () => {
-            this.translateText(text);
-        });
+        this.setState({texts, isRecording: false});
     }
 
     updateCountry(event) {
         let selectedLanguage = event.target.value;
         this.setState({
             selectedLanguage,
-            from: code[selectedLanguage],
             isRecording: false
         }, () => {
             recognition.stopRecognize();
         });
-    }
-
-    updateTranlsateLanguage(event) {
-        let target = event.target.value;
-        this.setState({
-            to: code[target]
-        })
-    }
-
-    translateText(text) {
-        let obj = {
-            text,
-            lang: this.state.from + '-' + this.state.to,
-            format: 'plain'
-        }
-        axios.post('https://translate.yandex.net/api/v1.5/tr.json/translate?key=' + freeKey + '&' + this.serialize(obj))
-            .then(response => {
-                let translated = this.state.translated;
-                let text = response.data.text[0]
-                translated.push(text);
-                this.setState({translated});
-            });
     }
 
     serialize(obj, prefix) {
@@ -126,18 +82,6 @@ export default class App extends React.Component {
                 <div id="results">
                     {this.state.texts.map((text, index) => <p key={index}>{text}</p>)}
                     <span id="interim_span" className="interim"></span>
-                </div>
-                <div id="div_language" className="translate">
-                    <span />
-                    <div className="language">
-                        Select translate language:  &nbsp;&nbsp;
-                        <select id="select_language" onChange={this.updateTranlsateLanguage}>
-                            {languages.map((language, index) => <option key={index} value={language[1]}>{language[0]}</option>)}
-                        </select>
-                    </div>
-                </div>
-                <div id="translate-results">
-                    {this.state.translated.map((text, index) => <p key={index}>{text}</p>)}
                 </div>
             </div>
         )
